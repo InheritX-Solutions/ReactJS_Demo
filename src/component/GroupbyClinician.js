@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Toast } from "primereact/toast";
 import "moment-timezone";
-import Moment from "react-moment";
-import data from "../assets/data.json";
 import moment from "moment-timezone";
 import "./DataTableStyle.css";
 var user = JSON.parse(localStorage.getItem("appointment"));
@@ -29,7 +27,9 @@ const rows = user.map((item) => {
   let startTime = moment(item.endDate);
   let endTime = moment(item.startDate);
   let duration = moment.duration(startTime.diff(endTime));
-  let totalDuration = duration.format("hh:mm:ss");
+  let totalDuration = moment
+  .utc(duration.asMilliseconds())
+  .format("HH:mm:ss");
 
   return createData(
     item.patient.name,
@@ -41,7 +41,7 @@ const rows = user.map((item) => {
   );
 });
 const DataTableRowGroupDemo = () => {
-  const [customers, setCustomers] = useState(rows);
+  const [customers] = useState(rows);
   const [expandedRows, setExpandedRows] = useState([]);
   const toast = useRef(null);
 
@@ -57,43 +57,43 @@ const DataTableRowGroupDemo = () => {
     return <React.Fragment></React.Fragment>;
   };
 
-  const countryBodyTemplate = (rowData) => {
-    return (
-      <React.Fragment>
-        <span className="image-text">{rowData.name}</span>
-      </React.Fragment>
-    );
-  };
+  // const countryBodyTemplate = (rowData) => {
+  //   return (
+  //     <React.Fragment>
+  //       <span className="image-text">{rowData.name}</span>
+  //     </React.Fragment>
+  //   );
+  // };
 
-  const statusBodyTemplate = (rowData) => {
-    return (
-      <span className={`customer-badge status-${rowData.status}`}>
-        {rowData.status}
-      </span>
-    );
-  };
+  // const statusBodyTemplate = (rowData) => {
+  //   return (
+  //     <span className={`customer-badge status-${rowData.status}`}>
+  //       {rowData.status}
+  //     </span>
+  //   );
+  // };
 
-  const representativeBodyTemplate = (rowData) => {
-    return (
-      <React.Fragment>
-        <span className="image-text">{rowData.name}</span>
-      </React.Fragment>
-    );
-  };
+  // const representativeBodyTemplate = (rowData) => {
+  //   return (
+  //     <React.Fragment>
+  //       <span className="image-text">{rowData.name}</span>
+  //     </React.Fragment>
+  //   );
+  // };
 
-  const calculateCustomerTotal = (name) => {
-    let total = 0;
+  // const calculateCustomerTotal = (name) => {
+  //   let total = 0;
 
-    if (customers) {
-      for (let customer of customers) {
-        if (customer.patient.name === name) {
-          total++;
-        }
-      }
-    }
+  //   if (customers) {
+  //     for (let customer of customers) {
+  //       if (customer.patient.name === name) {
+  //         total++;
+  //       }
+  //     }
+  //   }
 
-    return total;
-  };
+  //   return total;
+  // };
 
   return (
     <div className="datatable-rowgroup-demo">

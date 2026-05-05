@@ -16,18 +16,11 @@ import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import { GroupingState, IntegratedGrouping } from "@devexpress/dx-react-grid";
 import FilterListIcon from "@material-ui/icons/FilterList";
-import MaterialTable from "material-table";
 import "moment-timezone";
-import Moment from "react-moment";
 import data from "../assets/data.json";
 import moment from "moment-timezone";
-import {
-  Grid,
-  TableHeaderRow,
-  TableGroupRow,
-} from "@devexpress/dx-react-grid-material-ui";
+
 
 import TextField from "@material-ui/core/TextField";
 
@@ -61,7 +54,7 @@ export default function EnhancedTable() {
   const [orderBy, setOrderBy] = React.useState("startdate");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
+  const [dense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [patientname, setPatientname] = React.useState("");
   const [clinicianName, setClinicianName] = React.useState("");
@@ -107,16 +100,16 @@ export default function EnhancedTable() {
         },
       ]);
       localStorage.setItem("appointment", JSON.stringify(appointment));
-      let data = [
-        ...appointment,
-        {
-          id: id.toString(),
-          clinicianName: clinicianName,
-          endDate: enddate,
-          startDate: startdate,
-          patient: { id: id, name: patientname },
-        },
-      ];
+      // let data = [
+      //   ...appointment,
+      //   {
+      //     id: id.toString(),
+      //     clinicianName: clinicianName,
+      //     endDate: enddate,
+      //     startDate: startdate,
+      //     patient: { id: id, name: patientname },
+      //   },
+      // ];
     }
   }
 
@@ -138,17 +131,19 @@ export default function EnhancedTable() {
     setEnddate(e.target.value);
   }
 
-  const columns = [
-    { title: "patient", field: "patient.name" },
-    { title: "start date", field: "startDate" },
-    { title: "clinician name", field: "clinicianName" },
-    { title: "Status", field: "status" },
-  ];
+  // const columns = [
+  //   { title: "patient", field: "patient.name" },
+  //   { title: "start date", field: "startDate" },
+  //   { title: "clinician name", field: "clinicianName" },
+  //   { title: "Status", field: "status" },
+  // ];
   const rows = appointment.map((item) => {
     let startTime = moment(item.endDate);
     let endTime = moment(item.startDate);
     let duration = moment.duration(startTime.diff(endTime));
-    let totalDuration = duration.format("hh:mm:ss");
+    let totalDuration = moment
+  .utc(duration.asMilliseconds())
+  .format("HH:mm:ss");
 
     return createData(
       item.patient.name,
